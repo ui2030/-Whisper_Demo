@@ -1,4 +1,5 @@
 # Whisper STT 데모 — Hugging Face에서 openai/whisper-small을 받아 한국어 의료 문장의 말을 글자로 받아써보는 프로젝트(음성→텍스트)
+#음성 테스트는 나의 음성이 아닌 TTS의 음성으로 하였다.
 # 실행: C:\Users\ui2030\anaconda3\python.exe demo.py   (아나콘다 가상환경에서 사용함.)
 import time
 from pathlib import Path
