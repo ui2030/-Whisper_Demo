@@ -34,8 +34,7 @@ result = asr(
 elapsed = time.time() - t0
 
 original = (HERE / "original.txt").read_text(encoding="utf-8-sig").strip()
-print(f"\n전사 시간: {elapsed:.1f}초")
+print(f"\n말을 글자로 옮기는 시간: {elapsed:.1f}초")
 print(f"\n[원문]\n{original}")
 print(f"\n[Whisper 전사 결과]\n{result['text'].strip()}")
-print("\n두 텍스트를 비교해보세요 — 의료 용어(메트포르민, 상복부, 오심 등)에서 틀리는 부분이")
-print("바로 '의료 도메인 특화 파인튜닝'이 필요한 이유입니다.")
+# 의료 용어(메트포르민, 상복부, 오심 등)에서 틀리는 부분이 있다. 의료 분야의 특화 파인튜닝이 필요한 이유라고 생각한다
