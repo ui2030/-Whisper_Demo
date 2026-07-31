@@ -1,5 +1,5 @@
 # Whisper STT 데모 
-
+ 
 ## 뭘 했나
 1. 윈도우 내장 음성합성(TTS)으로 한국어 의료 문장을 읽어 `sample.wav` 생성 (16초)
 2. Hugging Face에서 `openai/whisper-small` 모델을 받아 로컬 GPU(CUDA)로 돌려보았다.
