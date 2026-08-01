@@ -1,9 +1,9 @@
-# Whisper STT 데모 
- 
+# Whisper STT 데모
+
 ## 뭘 했나
 1. 윈도우 내장 음성합성(TTS)으로 한국어 의료 문장을 읽어 `sample.wav` 생성 (16초)
-2. Hugging Face에서 `openai/whisper-small` 모델을 받아 로컬 GPU(CUDA)로 돌려보았다.
-3. 원문과 Whisper 결과 비교
+2. Hugging Face에서 `openai/whisper-small` 모델을 받아 로컬 GPU(CUDA)로 전사
+3. 원문과 전사 결과 비교
 
 ## 실행 방법
 ```
@@ -19,9 +19,30 @@ C:\Users\ui2030\anaconda3\python.exe demo.py
 | 오백 밀리그램 | **500mg** | 숫자·단위 자동 정규화 (오히려 잘함) |
 | 상복부·오심·심전도 | 전부 정확 | 기본 성능은 이미 상당함 |
 
+## CER 측정 (eval_cer.py)
+
+자작 한국어 의료 문장 40건(일반 20 + 약품명 20)을 윈도우 내장 TTS로 읽어 wav(16kHz mono)를 만들고,
+같은 `whisper-small`로 전사한 뒤 jiwer로 CER(문자 오류율)을 계산했다.
+
+```
+C:\Users\ui2030\anaconda3\python.exe eval_cer.py
+```
+- 결과: `out/cer_results.csv`(문장별), `out/cer_summary.txt`(요약)
+- 실행 환경: RTX 3060 CUDA, fp16 / 모델 로드 1.7초, 문장당 평균 전사 0.36초
+
+| 구분 | 문장 수 | 평균 CER |
+|---|---|---|
+| 전체 | 40 | 9.81% |
+| 일반 문장 | 20 | 7.17% |
+| 약품명 포함 문장 | 20 | 12.46% |
+
+약품명 문장의 CER이 일반 문장의 1.74배. 약품명 토큰이 정답 그대로 인식된 건 20건 중 2건
+(레보플록사신, 아지트로마이신)뿐이고, 나머지는 음이 바뀌거나(와파린→과파린, 암로디핀→앞노디,
+트라마돌→드라마 돌) 성분명이 중간에서 쪼개졌다(아토르바스타틴→아토르바 스타틴).
+
 ## 한 줄 배운 점
-커피챗 대비 오늘 아침에 Whisper를 직접 돌려봤습니다. 일반 문장은 거의 완벽한데
-약품명(메트포르민)을 틀린다. 왜 의료 도메인 파인튜닝이 필요한지 바로 이해가 가능했다.
+일반 문장은 거의 완벽한데 약품명은 20건 중 18건이 깨진다.
+범용 STT가 의료 현장에 그대로 못 들어가는 이유이자, 도메인 파인튜닝이 필요한 이유.
 
 ## 사용 기술
-transformers(허깅페이스 라이브러리) pipeline / PyTorch CUDA / fp16 / soundfile
+transformers(허깅페이스 라이브러리) pipeline / PyTorch CUDA / fp16 / soundfile / jiwer
